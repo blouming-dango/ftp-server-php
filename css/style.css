@@ -1,0 +1,194 @@
+/* Algemene stijlen */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #00ff59a3, #b4b4b6);
+    /* Zachte gradiënt achtergrond */
+}
+
+/* Container voor inhoud */
+.container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    /* Beperkte breedte voor betere leesbaarheid */
+    text-align: center;
+}
+
+/* Hoofdtekst */
+h1 {
+    color: #6200ea;
+    margin-bottom: 20px;
+    font-size: 2em;
+    font-weight: 600;
+}
+
+/* Formulierelementen */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    /* Ruimte tussen elementen */
+}
+
+label {
+    font-weight: 500;
+    text-align: left;
+    color: #555;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="file"],
+select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1em;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+select:focus {
+    border-color: #6200ea;
+    outline: none;
+}
+
+/* Knoppen */
+button,
+input[type="submit"] {
+    background-color: #6200ea;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+button:hover,
+input[type="submit"]:hover {
+    background-color: #3700b3;
+}
+
+/* Secundaire knop (zoals 'Back') */
+button[type="reset"],
+button.secondary {
+    background-color: #ccc;
+    color: #333;
+}
+
+button[type="reset"]:hover,
+button.secondary:hover {
+    background-color: #bbb;
+}
+
+/* Links */
+a {
+    color: #6200ea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #3700b3;
+    text-decoration: underline;
+}
+
+/* Lijsten (voor downloadpagina) */
+ul {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+}
+
+ul li {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+ul li:last-child {
+    border-bottom: none;
+}
+
+/* Foutmeldingen */
+.error {
+    color: #d32f2f;
+    font-size: 0.9em;
+    margin: 10px 0;
+}
+
+/* Navigatie (voor indexpagina) */
+nav ul {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+nav ul li {
+    border-bottom: none;
+}
+
+/* Responsiviteit */
+@media (max-width: 600px) {
+    .container {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.5em;
+    }
+}
+
+/* User info blokje */
+.user-info {
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9em;
+}
+
+.user-info p {
+    margin: 0;
+}
+
+.user-info strong {
+    color: #6200ea;
+}
+
+.logout-btn {
+    background-color: #d32f2f;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #b71c1c;
+    color: #fff;
+    text-decoration: none;
+}
