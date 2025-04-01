@@ -38,6 +38,18 @@ $userFiles = array_filter($uploads, fn($upload) => $upload['uploader'] === $_SES
 // Get the filenames of the user's files
 $files = array_column($userFiles, 'filename');
 
+// Function to shorten filenames for display
+function shortenFilename($filename, $maxLength = 20)
+{
+    if (strlen($filename) <= $maxLength) {
+        return $filename;
+    }
+    $extension = pathinfo($filename, PATHINFO_EXTENSION);
+    $baseName = substr($filename, 0, strlen($filename) - strlen($extension) - 1);
+    $shortenedBase = substr($baseName, 0, $maxLength - strlen($extension) - 3) . '...';
+    return $shortenedBase . '.' . $extension;
+}
+
 // As an admin, show all files
 if ($_SESSION['role'] === 'admin') {
     $files = array_column($uploads, 'filename'); // Admins can see all files
@@ -73,7 +85,8 @@ if ($_SESSION['role'] === 'admin') {
             <ul>
                 <?php foreach ($files as $file): ?>
                     <li>
-                        <a href="download.php?file=<?php echo urlencode($file); ?>"><?php echo htmlspecialchars($file); ?></a>
+                        <a
+                            href="download.php?file=<?php echo urlencode($file); ?>"><?php echo htmlspecialchars(shortenFilename($file)); ?></a>
                         (Size: <?php echo round(filesize($targetDir . $file) / 1024, 2); ?> KB,
                         Uploaded: <?php echo date("Y-m-d H:i:s", filemtime($targetDir . $file)); ?>)
                         <?php if ($isAdmin): ?>
@@ -84,7 +97,7 @@ if ($_SESSION['role'] === 'admin') {
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>
-        <button type="button" onclick="window.history.back();">Back</button>
+        <button type="button" onclick="location.href='upload.php'">Back</button>
     </div>
 </body>
 
@@ -99,9 +112,14 @@ if (isset($_GET['file'])) {
     // Check if the file exists and the user is allowed to download it
     $isUserFile = in_array($file, $files);
     if ($isUserFile && file_exists($filePath)) {
-        header('Content-Description: File Transfer');
-        header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
+        $fileType = mime_content_type($filePath);
+        header('Content-Type: ' . $fileType);
+        if ($fileType !== 'image/gif') {
+            header('Content-Description: File Transfer');
+            header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
+        } else {
+            header('Content-Disposition: inline; filename="' . basename($filePath) . '"');
+        }
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
         header('Pragma: public');

@@ -32,8 +32,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $fileType = mime_content_type($fileTmpName);
 
         // Define allowed file types and maximum file size (e.g., 2MB)
-        $allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
-        $maxFileSize = 2 * 1024 * 1024; // 2MB
+        $allowedTypes = ['image/jpeg', 'image/png', 'application/pdf', 'application/zip', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'pdf', 'zip', 'doc', 'docx'];
+        $maxFileSize = 100 * 1024 * 1024; // 100MB
+
+        // Fallback to check file extension if MIME type is not reliable
+        $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+        if (!in_array($fileType, $allowedTypes) || !in_array($fileExtension, $allowedExtensions)) {
+            $message = "File type not allowed.";
+            exit;
+        }
 
         // Sanitize file name
         $fileName = preg_replace("/[^a-zA-Z0-9\.\-_]/", "", $fileName);
@@ -108,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <input type="text" name="organization" id="organization" required>
 
             <label for="email">Email:</label>
-            <input type="text" name="email" id="email" required>
+            <input type="email" name="email" id="email" required>
 
             <input type="submit" value="Upload File">
         </form>
