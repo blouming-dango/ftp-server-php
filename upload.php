@@ -44,6 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Define the target file path
         $targetFilePath = $targetDir . $uniqueFileName;
 
+        // Get additional metadata from the form (if any)
+        $uploaderName = $_POST['uploader_name'] ?? '';
+        $organization = $_POST['organization'] ?? '';
+        $email = $_POST['email'] ?? '';
+
         // Check if the file type is allowed and size is within limit
         if (in_array($fileType, $allowedTypes) && $fileSize <= $maxFileSize) {
             if (move_uploaded_file($fileTmpName, $targetFilePath)) {
@@ -51,6 +56,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $uploads[] = [
                     'filename' => $uniqueFileName,
                     'uploader' => $_SESSION['username'],
+                    'uploader_name' => $uploaderName,
+                    'organization' => $organization,
+                    'email' => $email,
                     'uploaded_at' => date('Y-m-d H:i:s')
                 ];
                 file_put_contents($metadataFile, json_encode($uploads, JSON_PRETTY_PRINT));
@@ -92,6 +100,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <form action="upload.php" method="post" enctype="multipart/form-data">
             <label for="file">Choose file to upload:</label>
             <input type="file" name="file" id="file" required>
+
+            <label for="uploader_name">Your Name:</label>
+            <input type="text" name="uploader_name" id="uploader_name" required>
+
+            <label for="organization">Organization Name:</label>
+            <input type="text" name="organization" id="organization" required>
+
+            <label for="email">Email:</label>
+            <input type="text" name="email" id="email" required>
+
             <input type="submit" value="Upload File">
         </form>
         <br>

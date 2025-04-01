@@ -8,8 +8,28 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, #00ff59a3, #b4b4b6);
-    /* Zachte gradiënt achtergrond */
+    /* background: linear-gradient(135deg, #00ff59a3, #b4b4b6); Zachte gradiënt achtergrond */
+    background: repeating-linear-gradient(45deg,
+            #6200ea 0px,
+            #6200ea 20px,
+            #fff 20px,
+            #fff 40px,
+            #3700b3 40px,
+            #3700b3 60px);
+    background-size: 60px 60px;
+    animation: waveAnimation 10s linear infinite;
+}
+
+/* Definieer de animatie */
+@keyframes waveAnimation {
+    0% {
+        background-position: 0 0;
+    }
+
+    100% {
+        background-position: 60px 60px;
+        /* Verplaatsing gelijk aan background-size */
+    }
 }
 
 /* Container voor inhoud */
@@ -122,6 +142,15 @@ ul li {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+
+ul li small {
+    color: #666;
+    font-size: 0.85em;
+    display: block;
+    /* Zorgt dat het op een nieuwe regel komt */
+    margin-top: 5px;
 }
 
 ul li:last-child {
