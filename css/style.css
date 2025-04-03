@@ -8,8 +8,10 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    background: linear-gradient(to bottom, #87CEEB, #1E90FF);
+    overflow: hidden;
     /* background: linear-gradient(135deg, #00ff59a3, #b4b4b6); Zachte gradiënt achtergrond */
-    background: repeating-linear-gradient(45deg,
+    /* background: repeating-linear-gradient(45deg,
             #6200ea 0px,
             #6200ea 20px,
             #fff 20px,
@@ -17,19 +19,7 @@ body {
             #3700b3 40px,
             #3700b3 60px);
     background-size: 60px 60px;
-    animation: waveAnimation 10s linear infinite;
-}
-
-/* Definieer de animatie */
-@keyframes waveAnimation {
-    0% {
-        background-position: 0 0;
-    }
-
-    100% {
-        background-position: 60px 60px;
-        /* Verplaatsing gelijk aan background-size */
-    }
+    animation: waveAnimation 10s linear infinite; */
 }
 
 /* Container voor inhoud */
@@ -220,4 +210,45 @@ nav ul li {
     background-color: #b71c1c;
     color: #fff;
     text-decoration: none;
+}
+
+/* Animation */
+.wave-container {
+    position: absolute;
+    width: 200%;
+    /* Dubbele breedte voor naadloze herhaling */
+    bottom: 0;
+    left: 0;
+    display: flex;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    /* Subtiele schaduw */
+}
+
+.wave {
+    width: 50%;
+    /* Elke golf is de helft van de container */
+    height: 150px;
+    /* Hogere golven */
+}
+
+/* Animatie voor watergolf */
+@keyframes wave {
+    0% {
+        transform: translateX(0) translateY(0);
+    }
+
+    50% {
+        transform: translateX(-50%) translateY(-5px);
+        /* Lichte verticale beweging */
+    }
+
+    100% {
+        transform: translateX(-100%) translateY(0);
+    }
+}
+
+.wave-path {
+    animation: wave 10s ease-in-out infinite;
+    fill: rgba(135, 206, 235, 0.8);
+    /* Lichtblauw met transparantie */
 }

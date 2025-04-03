@@ -11,7 +11,7 @@ if (!isset($_SESSION['loggedin'])) {
 }
 
 // Define the target directory for uploaded files (outside the web root)
-$targetDir = __DIR__ . '/../uploads/';
+$targetDir = __DIR__ . '/uploads/';
 $metadataFile = __DIR__ . '/uploads.json';
 
 // Check if the directory exists, if not, create it

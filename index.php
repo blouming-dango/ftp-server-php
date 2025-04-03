@@ -8,6 +8,18 @@
 </head>
 
 <body>
+    <div class="wave-container">
+        <!-- Eerste SVG -->
+        <svg class="wave" viewBox="0 0 1000 150" preserveAspectRatio="none">
+            <path class="wave-path" d="M0,100 Q125,50 250,100 T500,100 T750,100 T1000,100 V150 H0 Z">
+            </path>
+        </svg>
+        <!-- Tweede SVG, identiek aan de eerste -->
+        <svg class="wave" viewBox="0 0 1000 150" preserveAspectRatio="none">
+            <path class="wave-path" d="M0,100 Q125,50 250,100 T500,100 T750,100 T1000,100 V150 H0 Z">
+            </path>
+        </svg>
+    </div>
     <div class="container">
         <h1>Web FTP Server</h1>
         <nav>

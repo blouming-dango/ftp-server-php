@@ -2,7 +2,7 @@
 session_start();
 
 // Define the target directory for uploaded files (outside the web root)
-$targetDir = __DIR__ . '/../uploads/';
+$targetDir = __DIR__ . '/uploads/';
 $metadataFile = __DIR__ . '/uploads.json';
 
 // Check if the user is logged in
@@ -107,8 +107,8 @@ if (isset($_GET['file'])) {
                     <li>
                         <a
                             href="download.php?file=<?php echo urlencode($file); ?>"><?php echo htmlspecialchars(shortenFilename($file)); ?></a>
-                        (Size: <?php echo round(filesize($targetDir . $file) / 1024, 2); ?> KB,
-                        Uploaded: <?php echo date("Y-m-d H:i:s", filemtime($targetDir . $file)); ?>)
+                        (Size: <?= round(filesize($targetDir . $file) / 1024, 2); ?> KB,
+                        Uploaded: <?= date("Y-m-d H:i:s", filemtime($targetDir . $file)); ?>)
                         <?php if ($isAdmin): ?>
                             <a href="download.php?delete=<?php echo urlencode($file); ?>" style="color: red;"
                                 onclick="return confirm('Are you sure?');">Delete</a>

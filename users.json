@@ -13,10 +13,5 @@
         "username": "brent",
         "password": "$2y$10$P8LVQI8sM4fSScaK8v0xiuJ8Qt9t813Y7B5o7TXUd8hEKhbZVtVQW",
         "role": "user"
-    },
-    {
-        "username": "user1",
-        "password": "$2y$10$aQgivp\/1PzR5WGMQrMvwdO3jjky1pm.dlPP3pAtQiYvQCcO6DQ6I.",
-        "role": "user"
     }
 ]
