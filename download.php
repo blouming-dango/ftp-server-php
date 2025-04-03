@@ -25,19 +25,22 @@ if ($isAdmin && isset($_GET['delete'])) {
     }
 }
 
+// Load existing uploads metadata
+$uploads = file_exists($metadataFile) ? json_decode(file_get_contents($metadataFile), true) : [];
+
+// As an admin, show all files
+if ($_SESSION['role'] === 'admin') {
+    $files = array_column($uploads, 'filename'); // Admins can see all files
+} else {
+    $userFiles = array_filter($uploads, fn($upload) => $upload['uploader'] === $_SESSION['username']);
+    $files = array_column($userFiles, 'filename');
+}
+
 // Check if the directory exists
 if (!is_dir($targetDir)) {
     die("Upload directory does not exist.");
 }
 
-// Load existing uploads metadata
-$uploads = file_exists($metadataFile) ? json_decode(file_get_contents($metadataFile), true) : [];
-
-// Filter the uploads to only show the files uploaded by the current user
-$userFiles = array_filter($uploads, fn($upload) => $upload['uploader'] === $_SESSION['username']);
-
-// Get the filenames of the user's files
-$files = array_column($userFiles, 'filename');
 
 // Function to shorten filenames for display
 function shortenFilename($filename, $maxLength = 20)
@@ -51,12 +54,28 @@ function shortenFilename($filename, $maxLength = 20)
     return $shortenedBase . '.' . $extension;
 }
 
-// As an admin, show all files
-if ($_SESSION['role'] === 'admin') {
-    $files = array_column($uploads, 'filename'); // Admins can see all files
-} else {
-    $userFiles = array_filter($uploads, fn($upload) => $upload['uploader'] === $_SESSION['username']);
-    $files = array_column($userFiles, 'filename');
+// Handle file download
+if (isset($_GET['file'])) {
+    $file = basename($_GET['file']);
+    $filePath = $targetDir . $file;
+
+    // Check if the file exists and the user is allowed to download it
+    $isUserFile = in_array($file, $files);
+    if (($isAdmin || $isUserFile) && file_exists($filePath)) {
+        $fileType = mime_content_type($filePath);
+        header('Content-Type: ' . $fileType);
+        header('Content-Description: File Transfer');
+        header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
+        header('Content-Disposition: inline; filename="' . basename($filePath) . '"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($filePath));
+        readfile($filePath);
+        exit;
+    } else {
+        echo "File not found or you don't have permission to download it.";
+    }
 }
 
 ?>
@@ -105,26 +124,5 @@ if ($_SESSION['role'] === 'admin') {
 </html>
 
 <?php
-// Handle file download
-if (isset($_GET['file'])) {
-    $file = basename($_GET['file']);
-    $filePath = $targetDir . $file;
 
-    // Check if the file exists and the user is allowed to download it
-    $isUserFile = in_array($file, $files);
-    if (($isAdmin || $isUserFile) && file_exists($filePath)) {
-        $fileType = mime_content_type($filePath);
-        header('Content-Type: ' . $fileType);
-        header('Content-Description: File Transfer');
-        header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
-        header('Content-Disposition: inline; filename="' . basename($filePath) . '"');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate');
-        header('Pragma: public');
-        header('Content-Length: ' . filesize($filePath));
-        readfile($filePath);
-        exit;
-    } else {
-        echo "File not found or you don't have permission to download it.";
-    }
-} ?>
+?>
