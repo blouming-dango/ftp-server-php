@@ -8,15 +8,28 @@
 </head>
 
 <body>
+    <!-- Wave container voor de achtergrond -->
     <div class="wave-container">
         <!-- Eerste SVG -->
-        <svg class="wave" viewBox="0 0 1000 150" preserveAspectRatio="none">
-            <path class="wave-path" d="M0,100 Q125,50 250,100 T500,100 T750,100 T1000,100 V150 H0 Z">
+        <svg class="wave" viewBox="0 0 1000 200" preserveAspectRatio="none">
+            <path class="wave-path" d="M0,150 Q125,100 250,150 T500,150 T750,150 T1000,150 V200 H0 Z">
             </path>
         </svg>
         <!-- Tweede SVG, identiek aan de eerste -->
-        <svg class="wave" viewBox="0 0 1000 150" preserveAspectRatio="none">
-            <path class="wave-path" d="M0,100 Q125,50 250,100 T500,100 T750,100 T1000,100 V150 H0 Z">
+        <svg class="wave" viewBox="0 0 1000 200" preserveAspectRatio="none">
+            <path class="wave-path" d="M0,150 Q125,100 250,150 T500,150 T750,150 T1000,150 V200 H0 Z">
+            </path>
+        </svg>
+    </div>
+
+    <!-- Tweede laag voor diepte (optioneel) -->
+    <div class="wave-container" style="bottom: 20px;">
+        <svg class="wave" viewBox="0 0 1000 200" preserveAspectRatio="none">
+            <path class="wave-path" d="M0,160 Q150,110 300,160 T600,160 T900,160 T1000,160 V200 H0 Z">
+            </path>
+        </svg>
+        <svg class="wave" viewBox="0 0 1000 200" preserveAspectRatio="none">
+            <path class="wave-path" d="M0,160 Q150,110 300,160 T600,160 T900,160 T1000,160 V200 H0 Z">
             </path>
         </svg>
     </div>

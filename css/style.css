@@ -8,8 +8,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(to bottom, #87CEEB, #1E90FF);
+    background: linear-gradient(135deg, #00feba, #5b548a);
     overflow: hidden;
+    position: relative;
     /* background: linear-gradient(135deg, #00ff59a3, #b4b4b6); Zachte gradiënt achtergrond */
     /* background: repeating-linear-gradient(45deg,
             #6200ea 0px,
@@ -215,40 +216,41 @@ nav ul li {
 /* Animation */
 .wave-container {
     position: absolute;
+    bottom: 0;
     width: 200%;
     /* Dubbele breedte voor naadloze herhaling */
-    bottom: 0;
-    left: 0;
+    height: 200px;
+    /* Hoogte van de golven */
     display: flex;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-    /* Subtiele schaduw */
+    left: 0;
 }
 
 .wave {
     width: 50%;
-    /* Elke golf is de helft van de container */
-    height: 150px;
-    /* Hogere golven */
+    /* Elke SVG is de helft van de container */
+    height: 100%;
 }
 
-/* Animatie voor watergolf */
-@keyframes wave {
+@keyframes move-forever {
     0% {
-        transform: translateX(0) translateY(0);
-    }
-
-    50% {
-        transform: translateX(-50%) translateY(-5px);
-        /* Lichte verticale beweging */
+        transform: translateX(0);
     }
 
     100% {
-        transform: translateX(-100%) translateY(0);
+        transform: translateX(-100%);
     }
 }
 
 .wave-path {
-    animation: wave 10s ease-in-out infinite;
-    fill: rgba(135, 206, 235, 0.8);
-    /* Lichtblauw met transparantie */
+    fill: rgba(255, 255, 255, 0.7);
+    /* Witte golf met transparantie */
+    animation: move-forever 20s cubic-bezier(.55, .5, .45, .5) infinite;
+    /* Soepele curve */
+}
+
+/* Tweede laag aanpassingen */
+.wave-container:nth-child(2) .wave-path {
+    fill: rgba(255, 255, 255, 0.5);
+    animation-duration: 15s;
+    /* Snellere beweging voor gelaagd effect */
 }

@@ -1,17 +1,1 @@
-[
-    {
-        "username": "admin",
-        "password": "$2y$10$Ok5q1Z9W0RtXBpcFB037zeviGq\/9OB.z\/VUTYJoKoi.zPZ88RdyzK",
-        "role": "admin"
-    },
-    {
-        "username": "users",
-        "password": "$2y$10$I7c1h4kjRkuIZsl1QitJyuTih1fq167QFb2mEaUeB7B4Vh8dUnmM2",
-        "role": "user"
-    },
-    {
-        "username": "brent",
-        "password": "$2y$10$P8LVQI8sM4fSScaK8v0xiuJ8Qt9t813Y7B5o7TXUd8hEKhbZVtVQW",
-        "role": "user"
-    }
-]
+[{"username":"admin","password":"$2y$10$Ok5q1Z9W0RtXBpcFB037zeviGq\/9OB.z\/VUTYJoKoi.zPZ88RdyzK","role":"admin"},{"username":"users","password":"$2y$10$I7c1h4kjRkuIZsl1QitJyuTih1fq167QFb2mEaUeB7B4Vh8dUnmM2","role":"user"},{"username":"brent","password":"$2y$10$P8LVQI8sM4fSScaK8v0xiuJ8Qt9t813Y7B5o7TXUd8hEKhbZVtVQW","role":"user"},{"username":"admin2","password":"$2y$10$QbGvPbbwZtEXD8o6Jw7SX.a\/0Tj1t5fM0MuIhw6knlXa5uNy1s7ru","role":"admin"}]
