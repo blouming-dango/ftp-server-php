@@ -86,7 +86,7 @@ select:focus {
     outline: none;
 }
 
-/* Knoppen */
+/* Buttons */
 button,
 input[type="submit"] {
     background-color: #6200ea;
@@ -104,7 +104,7 @@ input[type="submit"]:hover {
     background-color: #3700b3;
 }
 
-/* Secundaire knop (zoals 'Back') */
+/* Second button (such as 'Back') */
 button[type="reset"],
 button.secondary {
     background-color: #ccc;
@@ -129,7 +129,7 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Lijsten (voor downloadpagina) */
+/* Lists (for download page) */
 ul {
     list-style: none;
     padding: 0;
@@ -149,7 +149,7 @@ ul li small {
     color: #666;
     font-size: 0.85em;
     display: block;
-    /* Zorgt dat het op een nieuwe regel komt */
+    /* Ensures it appears on a new line */
     margin-top: 5px;
 }
 
@@ -157,14 +157,14 @@ ul li:last-child {
     border-bottom: none;
 }
 
-/* Foutmeldingen */
+/* Errormessages */
 .error {
     color: #d32f2f;
     font-size: 0.9em;
     margin: 10px 0;
 }
 
-/* Navigatie (voor indexpagina) */
+/* Navigation (for index page) */
 nav ul {
     display: flex;
     gap: 20px;
@@ -175,7 +175,7 @@ nav ul li {
     border-bottom: none;
 }
 
-/* Responsiviteit */
+/* Responsiveness */
 @media (max-width: 600px) {
     .container {
         margin: 20px;
@@ -187,7 +187,7 @@ nav ul li {
     }
 }
 
-/* User info blokje */
+/* User info block */
 .user-info {
     background-color: #f5f5f5;
     padding: 10px;

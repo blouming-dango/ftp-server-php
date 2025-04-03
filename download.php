@@ -1,6 +1,10 @@
 <?php
 session_start();
 
+// Define the target directory for uploaded files (outside the web root)
+$targetDir = __DIR__ . '/../uploads/';
+$metadataFile = __DIR__ . '/uploads.json';
+
 // Check if the user is logged in
 if (!isset($_SESSION['loggedin'])) {
     header('Location: login.php');
@@ -20,9 +24,6 @@ if ($isAdmin && isset($_GET['delete'])) {
         exit;
     }
 }
-// Define the target directory for uploaded files (outside the web root)
-$targetDir = __DIR__ . '/../uploads/';
-$metadataFile = __DIR__ . '/uploads.json';
 
 // Check if the directory exists
 if (!is_dir($targetDir)) {
@@ -111,15 +112,12 @@ if (isset($_GET['file'])) {
 
     // Check if the file exists and the user is allowed to download it
     $isUserFile = in_array($file, $files);
-    if ($isUserFile && file_exists($filePath)) {
+    if (($isAdmin || $isUserFile) && file_exists($filePath)) {
         $fileType = mime_content_type($filePath);
         header('Content-Type: ' . $fileType);
-        if ($fileType !== 'image/gif') {
-            header('Content-Description: File Transfer');
-            header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
-        } else {
-            header('Content-Disposition: inline; filename="' . basename($filePath) . '"');
-        }
+        header('Content-Description: File Transfer');
+        header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
+        header('Content-Disposition: inline; filename="' . basename($filePath) . '"');
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
         header('Pragma: public');
