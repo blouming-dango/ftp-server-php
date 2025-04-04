@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <option value="admin">Admin</option>
             </select>
             <br>
-            <button onclick="window.location.href='index.php';" class="button">Home</button>
+            <button onclick="window.location.href='index.html';" class="button">Home</button>
             <button type="submit">Register</button>
         </form>
         <p>Already have an account? <a href="login.php">Login here</a>.</p>
