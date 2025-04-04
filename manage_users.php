@@ -27,6 +27,13 @@ if (isset($_GET['delete'])) {
 </head>
 
 <body>
+
+    <div class="ocean">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
     <div class="container">
         <h1>Manage Users</h1>
         <ul>

@@ -48,6 +48,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 
 <body>
+
+    <!-- Zeegolf animatie -->
+    <div class="ocean">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
+
     <div class="container">
         <h1>User Login</h1>
         <?php if (isset($error)): ?>

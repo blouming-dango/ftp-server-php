@@ -52,6 +52,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 
 <body>
+
+    <div class="ocean">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
     <div class="container">
         <h1>User Registration</h1>
         <?php if (isset($error)): ?>

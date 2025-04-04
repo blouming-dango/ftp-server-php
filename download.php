@@ -90,6 +90,14 @@ if (isset($_GET['file'])) {
 </head>
 
 <body>
+
+    <!-- Zeegolf animatie -->
+    <div class="ocean">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
     <div class="container">
         <!-- Ingelogd als blokje -->
         <div class="user-info">

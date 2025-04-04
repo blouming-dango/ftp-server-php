@@ -1,4 +1,9 @@
 /* Algemene stijlen */
+html,
+body {
+    height: 100%;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #333;
@@ -8,19 +13,10 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, #00feba, #5b548a);
+    background: radial-gradient(rgba(255, 254, 234, 1) 0%, rgba(255, 254, 234, 1) 35%, #B7E8EB 100%);
+    /* Nieuwe achtergrond */
     overflow: hidden;
     position: relative;
-    /* background: linear-gradient(135deg, #00ff59a3, #b4b4b6); Zachte gradiënt achtergrond */
-    /* background: repeating-linear-gradient(45deg,
-            #6200ea 0px,
-            #6200ea 20px,
-            #fff 20px,
-            #fff 40px,
-            #3700b3 40px,
-            #3700b3 60px);
-    background-size: 60px 60px;
-    animation: waveAnimation 10s linear infinite; */
 }
 
 /* Container voor inhoud */
@@ -31,16 +27,108 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 500px;
-    /* Beperkte breedte voor betere leesbaarheid */
     text-align: center;
+    position: relative;
+    z-index: 2;
+    /* Boven de golven */
 }
 
 /* Hoofdtekst */
 h1 {
-    color: #6200ea;
+    color: #015871;
     margin-bottom: 20px;
     font-size: 2em;
     font-weight: 600;
+}
+
+nav ul li {
+    border-bottom: none;
+}
+
+/* Buttons */
+button {
+    background-color: #015871;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #013f52;
+}
+
+/* Nieuwe zeegolf animatie */
+.ocean {
+    height: 5%;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: #015871;
+    /* Donkerblauwe oceaanbasis */
+    z-index: 1;
+}
+
+.wave {
+    background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/85486/wave.svg) repeat-x;
+    position: absolute;
+    width: 6400px;
+    /* Brede golf voor herhaling */
+    top: -198px;
+    left: 0;
+    height: 198px;
+    transform: translate(0, 0, 0);
+    animation: wave 7s ease infinite;
+}
+
+.wave:nth-of-type(2) {
+    top: -168px;
+    animation: swell 4s ease infinite;
+    opacity: 1;
+}
+
+/* Add a third wave */
+.wave:nth-of-type(3) {
+    top: -138px;
+    animation: wave-reverse 6s ease infinite;
+    opacity: 0.8;
+}
+
+@keyframes wave {
+    0% {
+        margin-left: 0;
+    }
+
+    100% {
+        margin-left: -1600px;
+    }
+}
+
+@keyframes swell {
+
+    0%,
+    100% {
+        transform: translate(0, -30px);
+    }
+
+    50% {
+        transform: translate(0, 5px);
+    }
+}
+
+/* Keyframes for reverse wave animation */
+@keyframes wave-reverse {
+    0% {
+        margin-left: -1600px;
+    }
+
+    100% {
+        margin-left: 0;
+    }
 }
 
 /* Formulierelementen */
@@ -73,14 +161,14 @@ select {
 input[type="text"]:focus,
 input[type="password"]:focus,
 select:focus {
-    border-color: #6200ea;
+    border-color: #015871;
     outline: none;
 }
 
 /* Buttons */
 button,
 input[type="submit"] {
-    background-color: #6200ea;
+    background-color: #015871;
     color: #fff;
     border: none;
     padding: 12px;
@@ -92,7 +180,7 @@ input[type="submit"] {
 
 button:hover,
 input[type="submit"]:hover {
-    background-color: #3700b3;
+    background-color: #013f52;
 }
 
 /* Second button (such as 'Back') */
@@ -109,14 +197,14 @@ button.secondary:hover {
 
 /* Links */
 a {
-    color: #6200ea;
+    color: #015871;
     text-decoration: none;
     font-weight: 500;
     transition: color 0.3s;
 }
 
 a:hover {
-    color: #3700b3;
+    color: #013f52;
     text-decoration: underline;
 }
 
@@ -195,7 +283,7 @@ nav ul li {
 }
 
 .user-info strong {
-    color: #6200ea;
+    color: #015871;
 }
 
 .logout-btn {
@@ -211,46 +299,4 @@ nav ul li {
     background-color: #b71c1c;
     color: #fff;
     text-decoration: none;
-}
-
-/* Animation */
-.wave-container {
-    position: absolute;
-    bottom: 0;
-    width: 200%;
-    /* Dubbele breedte voor naadloze herhaling */
-    height: 200px;
-    /* Hoogte van de golven */
-    display: flex;
-    left: 0;
-}
-
-.wave {
-    width: 50%;
-    /* Elke SVG is de helft van de container */
-    height: 100%;
-}
-
-@keyframes move-forever {
-    0% {
-        transform: translateX(0);
-    }
-
-    100% {
-        transform: translateX(-100%);
-    }
-}
-
-.wave-path {
-    fill: rgba(255, 255, 255, 0.7);
-    /* Witte golf met transparantie */
-    animation: move-forever 20s cubic-bezier(.55, .5, .45, .5) infinite;
-    /* Soepele curve */
-}
-
-/* Tweede laag aanpassingen */
-.wave-container:nth-child(2) .wave-path {
-    fill: rgba(255, 255, 255, 0.5);
-    animation-duration: 15s;
-    /* Snellere beweging voor gelaagd effect */
 }
