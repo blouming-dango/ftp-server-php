@@ -2,6 +2,7 @@
 html,
 body {
     height: 100%;
+    overflow-y: scroll;
 }
 
 body {
@@ -13,8 +14,11 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: radial-gradient(rgba(255, 254, 234, 1) 0%, rgba(255, 254, 234, 1) 35%, #B7E8EB 100%);
-    /* Nieuwe achtergrond */
+    background-size: 100% 100%;
+    background-position: 0px 0px;
+    background-image: radial-gradient(75% 75% at 50% 50%, #7d86a9 0%, #071650 100%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     overflow: hidden;
     position: relative;
 }
