@@ -1,30 +1,37 @@
 <?php
-// filepath: c:\Users\brent\OneDrive\Documenten\Projecten\web-ftp-server\register.php
-echo "<link rel='stylesheet' type='text/css' href='public/styles.css' />";
-
 session_start();
+if (!isset($_SESSION['loggedin']) || !in_array($_SESSION['role'], ['superuser', 'admin'])) {
+    header('Location: login.php');
+    exit;
+}
 
-// Generate a CSRF token
+$usersFile = __DIR__ . '/users.json';
+$organizationsFile = __DIR__ . '/organizations.json';
+$organizations = file_exists($organizationsFile) ? json_decode(file_get_contents($organizationsFile), true) : [];
+
 if (!isset($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
-// Define the path to the users file
-$usersFile = __DIR__ . '/users.json';
 
-// Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         die("Invalid CSRF token.");
     }
 
     $username = $_POST['username'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash the password
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $role = $_POST['role'];
+    $organization = $_POST['organization'] ?? null;
 
-    // Load existing users
+    // Validatie gebaseerd op ingelogde gebruiker
+    if ($_SESSION['role'] === 'admin' && ($role !== 'user' || $organization !== $_SESSION['organization'])) {
+        $error = "Admins can only create users for their own organization.";
+    } elseif ($_SESSION['role'] === 'superuser' && $role === 'user' && empty($organization)) {
+        $error = "Organization is required for users.";
+    }
+
+    // Controleer of de gebruikersnaam al bestaat
     $users = file_exists($usersFile) ? json_decode(file_get_contents($usersFile), true) : [];
-
-    // Check if the username already exists
     foreach ($users as $user) {
         if ($user['username'] === $username) {
             $error = "Username already exists.";
@@ -32,11 +39,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // If no error, add the new user
+    // Voeg nieuwe gebruiker toe
     if (!isset($error)) {
-        $users[] = ['username' => $username, 'password' => $password, 'role' => $role];
-        file_put_contents($usersFile, json_encode($users));
-        header('Location: login.php?registered=1');
+        $users[] = [
+            'username' => $username,
+            'password' => $password,
+            'role' => $role,
+            'organization' => $organization
+        ];
+        file_put_contents($usersFile, json_encode($users, JSON_PRETTY_PRINT));
+        header('Location: manage_users.php?message=User created successfully');
         exit;
     }
 }
@@ -52,21 +64,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 
 <body>
-
     <div class="ocean">
         <div class="wave"></div>
         <div class="wave"></div>
         <div class="wave"></div>
     </div>
-
     <div class="container">
         <h1>User Registration</h1>
         <?php if (isset($error)): ?>
-            <p style="color: red;"><?php echo $error; ?></p>
+            <p style="color: red;"><?php echo htmlspecialchars($error); ?></p>
         <?php endif; ?>
         <form action="register.php" method="post">
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-            <!-- Bestaande velden -->
             <label for="username">Username:</label>
             <input type="text" name="username" id="username" required>
             <br>
@@ -75,14 +84,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <br>
             <label for="role">Role:</label>
             <select name="role" id="role">
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
+                <?php if ($_SESSION['role'] === 'superuser'): ?>
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                <?php else: ?>
+                    <option value="user">User</option>
+                <?php endif; ?>
             </select>
             <br>
-            <button onclick="window.location.href='index.php';" class="button">Home</button>
+            <label for="organization">Organization:</label>
+            <?php if ($_SESSION['role'] === 'superuser'): ?>
+                <select name="organization" id="organization">
+                    <option value="">Select an organization</option>
+                    <?php foreach ($organizations as $org): ?>
+                        <option value="<?php echo htmlspecialchars($org['name']); ?>">
+                            <?php echo htmlspecialchars($org['name']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            <?php else: ?>
+                <input type="text" name="organization" value="<?php echo htmlspecialchars($_SESSION['organization']); ?>"
+                    readonly>
+            <?php endif; ?>
+            <br>
+            <button type="button" onclick="window.location.href='index.php';">Home</button>
             <button type="submit">Register</button>
         </form>
-        <p>Already have an account? <a href="login.php">Login here</a>.</p>
     </div>
 </body>
 

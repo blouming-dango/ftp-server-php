@@ -1,37 +1,39 @@
 <?php
 session_start();
-
-// Define the target directory for uploaded files (outside the web root)
-$targetDir = __DIR__ . '/uploads/';
-$metadataFile = __DIR__ . '/uploads.json';
-
-// Check if the user is logged in
 if (!isset($_SESSION['loggedin'])) {
     header('Location: login.php');
     exit;
 }
 
-// Check if the user is an admin
-$isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
+$targetDir = __DIR__ . '/uploads/';
+$metadataFile = __DIR__ . '/uploads.json';
+$isAdmin = $_SESSION['role'] === 'admin';
+$isSuperuser = $_SESSION['role'] === 'superuser';
 
-// Delete file as admin
-if ($isAdmin && isset($_GET['delete'])) {
+// Verwijder bestand als admin of superuser
+if (($isAdmin || $isSuperuser) && isset($_GET['delete'])) {
     $fileToDelete = basename($_GET['delete']);
     $filePath = $targetDir . $fileToDelete;
 
     if (file_exists($filePath)) {
-        if (unlink($filePath)) {
-            // Remove the file's metadata from uploads.json
-            if (file_exists($metadataFile)) {
-                $uploads = json_decode(file_get_contents($metadataFile), true);
-                $uploads = array_filter($uploads, function ($upload) use ($fileToDelete) {
-                    return $upload['filename'] !== $fileToDelete;
-                });
-                file_put_contents($metadataFile, json_encode(array_values($uploads), JSON_PRETTY_PRINT));
+        $uploads = json_decode(file_get_contents($metadataFile), true);
+        $fileOrg = null;
+        foreach ($uploads as $upload) {
+            if ($upload['filename'] === $fileToDelete) {
+                $fileOrg = $upload['organization'];
+                break;
             }
-            header('Location: download.php?message=File deleted successfully');
+        }
+        if ($isSuperuser || ($isAdmin && $fileOrg === $_SESSION['organization'])) {
+            if (unlink($filePath)) {
+                $uploads = array_filter($uploads, fn($upload) => $upload['filename'] !== $fileToDelete);
+                file_put_contents($metadataFile, json_encode(array_values($uploads), JSON_PRETTY_PRINT));
+                header('Location: download.php?message=File deleted successfully');
+            } else {
+                header('Location: download.php?error=Failed to delete the file');
+            }
         } else {
-            header('Location: download.php?error=Failed to delete the file');
+            header('Location: download.php?error=Permission denied');
         }
     } else {
         header('Location: download.php?error=File does not exist');
@@ -39,64 +41,36 @@ if ($isAdmin && isset($_GET['delete'])) {
     exit;
 }
 
-// Load existing uploads metadata
+// Laad uploads metadata
 $uploads = file_exists($metadataFile) ? json_decode(file_get_contents($metadataFile), true) : [];
 
-// As an admin, show all files
-if ($_SESSION['role'] === 'admin') {
-    $files = array_column($uploads, 'filename'); // Admins can see all files
+// Filter bestanden gebaseerd op rol
+if ($isSuperuser) {
+    $files = array_column($uploads, 'filename');
+} elseif ($isAdmin) {
+    $userFiles = array_filter($uploads, fn($upload) => $upload['organization'] === $_SESSION['organization']);
+    $files = array_column($userFiles, 'filename');
 } else {
-    $userFiles = array_filter($uploads, fn($upload) => $upload['uploader'] === $_SESSION['username']);
+    $userFiles = array_filter($uploads, fn($upload) => $upload['uploader'] === $_SESSION['username'] && $upload['organization'] === $_SESSION['organization']);
     $files = array_column($userFiles, 'filename');
 }
 
-// Check if the directory exists
-if (!is_dir($targetDir)) {
-    die("Upload directory does not exist.");
-}
-
-
-// Function to shorten filenames for display
-function shortenFilename($filename, $maxLength = 20)
-{
-    if (strlen($filename) <= $maxLength) {
-        return $filename;
-    }
-    $extension = pathinfo($filename, PATHINFO_EXTENSION);
-    $baseName = substr($filename, 0, strlen($filename) - strlen($extension) - 1);
-    $shortenedBase = substr($baseName, 0, $maxLength - strlen($extension) - 3) . '...';
-    return $shortenedBase . '.' . $extension;
-}
-
-// Handle file download
+// Download logica
 if (isset($_GET['file'])) {
     $file = basename($_GET['file']);
     $filePath = $targetDir . $file;
-
-    // Check if the file exists and the user is allowed to download it
     $isUserFile = in_array($file, $files);
-    if (($isAdmin || $isUserFile) && file_exists($filePath)) {
+    if (($isSuperuser || $isAdmin || $isUserFile) && file_exists($filePath)) {
         $fileType = mime_content_type($filePath);
-        // Set headers for file download
         header('Content-Type: ' . $fileType);
-        header('Content-Description: File Transfer');
-
-        // Force download for all file types, including images
         header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
-
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate');
-        header('Pragma: public');
         header('Content-Length: ' . filesize($filePath));
-
-        // Output the file content
         readfile($filePath);
         exit;
     } else {
         echo "File not found or you don't have permission to download it.";
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -146,6 +120,10 @@ if (isset($_GET['file'])) {
                             Uploaded: <?= date("Y-m-d H:i:s", filemtime("{$targetDir}{$file}")); ?>)
                         <?php else: ?>
                             (File no longer exists)
+                        <?php endif; ?>
+                        <?php if ($isAdmin || $isSuperuser): ?>
+                            <a href="download.php?delete=<?php echo urlencode($file); ?>" style="color: red;"
+                                onclick="return confirm('Are you sure?');">Delete</a>
                         <?php endif; ?>
                         <form method="GET" action="download.php" style="display: inline;">
                             <input type="hidden" name="file" value="<?php echo htmlspecialchars($file); ?>">
