@@ -8,6 +8,13 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['role'] !== 'admin') {
 $usersFile = __DIR__ . '/users.json';
 $users = json_decode(file_get_contents($usersFile), true);
 
+// Handle search functionality
+$searchQuery = isset($_GET['search']) ? trim($_GET['search']) : '';
+if ($searchQuery !== '') {
+    $users = array_filter($users, fn($user) => stripos($user['username'], $searchQuery) !== false);
+}
+
+// Handle user deletion
 if (isset($_GET['delete'])) {
     $usernameToDelete = $_GET['delete'];
     $users = array_filter($users, fn($user) => $user['username'] !== $usernameToDelete);
@@ -36,6 +43,12 @@ if (isset($_GET['delete'])) {
 
     <div class="container">
         <h1>Manage Users</h1>
+        <!-- Search bar -->
+        <form method="GET" action="manage_users.php" style="margin-bottom: 20px;">
+            <input type="text" name="search" placeholder="Search users..."
+                value="<?php echo htmlspecialchars($searchQuery); ?>" />
+            <button type="submit">Search</button>
+        </form>
         <ul>
             <?php foreach ($users as $user): ?>
                 <li>

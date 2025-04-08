@@ -18,11 +18,25 @@ $isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
 if ($isAdmin && isset($_GET['delete'])) {
     $fileToDelete = basename($_GET['delete']);
     $filePath = $targetDir . $fileToDelete;
+
     if (file_exists($filePath)) {
-        unlink($filePath);
-        header('Location: download.php');
-        exit;
+        if (unlink($filePath)) {
+            // Remove the file's metadata from uploads.json
+            if (file_exists($metadataFile)) {
+                $uploads = json_decode(file_get_contents($metadataFile), true);
+                $uploads = array_filter($uploads, function ($upload) use ($fileToDelete) {
+                    return $upload['filename'] !== $fileToDelete;
+                });
+                file_put_contents($metadataFile, json_encode(array_values($uploads), JSON_PRETTY_PRINT));
+            }
+            header('Location: download.php?message=File deleted successfully');
+        } else {
+            header('Location: download.php?error=Failed to delete the file');
+        }
+    } else {
+        header('Location: download.php?error=File does not exist');
     }
+    exit;
 }
 
 // Load existing uploads metadata
@@ -63,14 +77,19 @@ if (isset($_GET['file'])) {
     $isUserFile = in_array($file, $files);
     if (($isAdmin || $isUserFile) && file_exists($filePath)) {
         $fileType = mime_content_type($filePath);
+        // Set headers for file download
         header('Content-Type: ' . $fileType);
         header('Content-Description: File Transfer');
+
+        // Force download for all file types, including images
         header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
-        header('Content-Disposition: inline; filename="' . basename($filePath) . '"');
+
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
         header('Pragma: public');
         header('Content-Length: ' . filesize($filePath));
+
+        // Output the file content
         readfile($filePath);
         exit;
     } else {
@@ -105,6 +124,14 @@ if (isset($_GET['file'])) {
                 (<?php echo $_SESSION['role']; ?>)</p>
             <a href="logout.php" class="logout-btn">Logout</a>
         </div>
+        <!-- Succesful delete message -->
+        <?php if (isset($_GET['message'])): ?>
+            <p style="color: green;"><?php echo htmlspecialchars($_GET['message']); ?></p>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['error'])): ?>
+            <p style="color: red;"><?php echo htmlspecialchars($_GET['error']); ?></p>
+        <?php endif; ?>
         <h1>Download Files</h1>
         <h2>Uploaded Files</h2>
         <?php if (empty($files)): ?>
@@ -113,12 +140,20 @@ if (isset($_GET['file'])) {
             <ul>
                 <?php foreach ($files as $file): ?>
                     <li>
-                        <a
-                            href="download.php?file=<?php echo urlencode($file); ?>"><?php echo htmlspecialchars(shortenFilename($file)); ?></a>
-                        (Size: <?= round(filesize($targetDir . $file) / 1024, 2); ?> KB,
-                        Uploaded: <?= date("Y-m-d H:i:s", filemtime($targetDir . $file)); ?>)
+                        <span><?php echo htmlspecialchars(shortenFilename($file)); ?></span>
+                        <?php if (file_exists("{$targetDir}{$file}")): ?>
+                            (Size: <?= round(filesize("{$targetDir}{$file}") / 1024, 2); ?> KB,
+                            Uploaded: <?= date("Y-m-d H:i:s", filemtime("{$targetDir}{$file}")); ?>)
+                        <?php else: ?>
+                            (File no longer exists)
+                        <?php endif; ?>
+                        <form method="GET" action="download.php" style="display: inline;">
+                            <input type="hidden" name="file" value="<?php echo htmlspecialchars($file); ?>">
+                            <button type="submit"
+                                style="background-color: #015871; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Download</button>
+                        </form>
                         <?php if ($isAdmin): ?>
-                            <a href="download.php?delete=<?php echo urlencode($file); ?>" style="color: red;"
+                            <a href="download.php?delete=<?php echo urlencode($file); ?>" style="color: red; margin-left: 10px;"
                                 onclick="return confirm('Are you sure?');">Delete</a>
                         <?php endif; ?>
                     </li>
