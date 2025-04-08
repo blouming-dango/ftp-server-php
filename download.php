@@ -5,6 +5,21 @@ if (!isset($_SESSION['loggedin'])) {
     exit;
 }
 
+/**
+ * Shortens a filename to a specified length, adding ellipsis if necessary.
+ *
+ * @param string $filename The original filename.
+ * @param int $maxLength The maximum length of the shortened filename.
+ * @return string The shortened filename.
+ */
+function shortenFilename($filename, $maxLength = 20)
+{
+    if (strlen($filename) > $maxLength) {
+        return substr($filename, 0, $maxLength - 3) . '...';
+    }
+    return $filename;
+}
+
 $targetDir = __DIR__ . '/uploads/';
 $metadataFile = __DIR__ . '/uploads.json';
 $isAdmin = $_SESSION['role'] === 'admin';
