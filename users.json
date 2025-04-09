@@ -15,9 +15,15 @@
         "role": "admin"
     },
     {
-        "username": "superadmin",
+        "username": "superuser",
         "password": "$2y$10$QbGvPbbwZtEXD8o6Jw7SX.a\/0Tj1t5fM0MuIhw6knlXa5uNy1s7ru",
-        "role": "superadmin",
+        "role": "superuser",
         "organization": null
+    },
+    {
+        "username": "adminIntervance",
+        "password": "$2y$10$BWE9akS4IFHbDYcVIJfaPOZPDWt8ASbphixopUH8lGLXM70vjzW8W",
+        "role": "admin",
+        "organization": "Intervance"
     }
 ]

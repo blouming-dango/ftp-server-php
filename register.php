@@ -103,8 +103,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <?php endforeach; ?>
                 </select>
             <?php else: ?>
-                <input type="text" name="organization" value="<?php echo htmlspecialchars($_SESSION['organization']); ?>"
-                    readonly>
+                <input type="text" name="organization" id="organization"
+                    value="<?php echo isset($_SESSION['organization']) ? htmlspecialchars($_SESSION['organization']) : ''; ?>">
             <?php endif; ?>
             <br>
             <button type="button" onclick="window.location.href='index.php';">Home</button>

@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 if (!isset($_SESSION['loggedin']) || !in_array($_SESSION['role'], ['superuser', 'admin'])) {
     header('Location: login.php');
     exit;
@@ -10,7 +11,7 @@ $users = json_decode(file_get_contents($usersFile), true);
 
 // Filter gebruikers gebaseerd op rol
 if ($_SESSION['role'] === 'admin') {
-    $users = array_filter($users, fn($user) => $user['organization'] === $_SESSION['organization']);
+    $users = array_filter($users, fn($user) => isset($user['organization']) && $user['organization'] === $_SESSION['organization']);
 }
 
 // Handle zoekfunctionaliteit
