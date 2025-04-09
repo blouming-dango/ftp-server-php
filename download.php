@@ -145,10 +145,6 @@ if (isset($_GET['file'])) {
                             <button type="submit"
                                 style="background-color: #015871; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Download</button>
                         </form>
-                        <?php if ($isAdmin): ?>
-                            <a href="download.php?delete=<?php echo urlencode($file); ?>" style="color: red; margin-left: 10px;"
-                                onclick="return confirm('Are you sure?');">Delete</a>
-                        <?php endif; ?>
                     </li>
                 <?php endforeach; ?>
             </ul>

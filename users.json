@@ -13,5 +13,11 @@
         "username": "admin2",
         "password": "$2y$10$QbGvPbbwZtEXD8o6Jw7SX.a\/0Tj1t5fM0MuIhw6knlXa5uNy1s7ru",
         "role": "admin"
+    },
+    {
+        "username": "superadmin",
+        "password": "$2y$10$QbGvPbbwZtEXD8o6Jw7SX.a\/0Tj1t5fM0MuIhw6knlXa5uNy1s7ru",
+        "role": "superadmin",
+        "organization": null
     }
 ]
