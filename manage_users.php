@@ -112,8 +112,7 @@ $message = $_GET['message'] ?? '';
             <?php foreach ($displayUsers as $user): ?>
                 <li>
                     <?php echo htmlspecialchars($user['username'] ?? 'Unknown'); ?>
-                    (Email: <?php echo htmlspecialchars($user['email'] ?? 'None'); ?>,
-                    Role: <?php echo htmlspecialchars($user['role'] ?? 'Unknown'); ?>,
+                    (Role: <?php echo htmlspecialchars($user['role'] ?? 'Unknown'); ?>,
                     Organization: <?php echo htmlspecialchars($user['organization'] ?? 'None'); ?>)
                     <a href="manage_users.php?delete=<?php echo urlencode($user['username'] ?? ''); ?>" style="color: red;"
                         onclick="return confirm('Are you sure?');">Delete</a>
