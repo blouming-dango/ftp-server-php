@@ -26,11 +26,11 @@
                         <button type="submit">Login</button>
                     </form>
                 </li>
-                <li>
+                <!-- <li>
                     <form action="register.php" method="get">
                         <button type="submit">Register</button>
                     </form>
-                </li>
+                </li> -->
             </ul>
         </nav>
     </div>

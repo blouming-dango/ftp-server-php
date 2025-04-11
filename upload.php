@@ -104,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 
     <div class="container">
-        <!-- Signed in block -->
+        <!-- Logout button -->
         <div class="user-info">
             <p>Logged in as: <strong><?php echo htmlspecialchars($_SESSION['username']); ?></strong>
                 (<?php echo $_SESSION['role']; ?>)</p>

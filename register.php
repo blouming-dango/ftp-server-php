@@ -1,55 +1,73 @@
 <?php
 session_start();
+
+// Restrict access to superuser or admin
 if (!isset($_SESSION['loggedin']) || !in_array($_SESSION['role'], ['superuser', 'admin'])) {
     header('Location: login.php');
     exit;
 }
 
 $usersFile = __DIR__ . '/users.json';
-$organizationsFile = __DIR__ . '/organizations.json';
-$organizations = file_exists($organizationsFile) ? json_decode(file_get_contents($organizationsFile), true) : [];
-
-if (!isset($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+// Load users, default to empty array if file is invalid
+$users = file_exists($usersFile) ? json_decode(file_get_contents($usersFile), true) : [];
+if (!is_array($users)) {
+    $users = [];
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        die("Invalid CSRF token.");
+// Handle registration
+$message = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $newUser = [
+        'username' => filter_var($_POST['username'] ?? '', FILTER_SANITIZE_STRING),
+        'password' => password_hash($_POST['password'] ?? '', PASSWORD_DEFAULT),
+        'email' => filter_var($_POST['email'] ?? ''),
+    ];
+
+    // Debug session values
+    $debugLog = "Register attempt: role={$_SESSION['role']}, organization=" . (isset($_SESSION['organization']) ? $_SESSION['organization'] : 'unset') . "\n";
+    file_put_contents('debug.log', $debugLog, FILE_APPEND);
+
+    // Role and organization based on logged-in user
+    if ($_SESSION['role'] === 'admin' && isset($_SESSION['organization'])) {
+        $newUser['role'] = 'user';
+        $newUser['organization'] = $_SESSION['organization'];
+    } elseif ($_SESSION['role'] === 'superuser') {
+        $newUser['role'] = 'admin';
+        $newUser['organization'] = filter_var($_POST['organization'] ?? '', FILTER_SANITIZE_STRING);
+    } else {
+        $message = "Error: Unauthorized action (role: {$_SESSION['role']}, org: " . (isset($_SESSION['organization']) ? $_SESSION['organization'] : 'unset') . ").";
     }
 
-    $username = $_POST['username'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $role = $_POST['role'];
-    $organization = $_POST['organization'] ?? null;
-
-    // Validatie gebaseerd op ingelogde gebruiker
-    if ($_SESSION['role'] === 'admin' && ($role !== 'user' || $organization !== $_SESSION['organization'])) {
-        $error = "Admins can only create users for their own organization.";
-    } elseif ($_SESSION['role'] === 'superuser' && $role === 'user' && empty($organization)) {
-        $error = "Organization is required for users.";
-    }
-
-    // Controleer of de gebruikersnaam al bestaat
-    $users = file_exists($usersFile) ? json_decode(file_get_contents($usersFile), true) : [];
-    foreach ($users as $user) {
-        if ($user['username'] === $username) {
-            $error = "Username already exists.";
-            break;
+    // Validate inputs
+    if (!$message) {
+        // Check required fields
+        if (empty($newUser['username'])) {
+            $message = "Error: Username is required.";
+        } elseif (empty($_POST['password'])) {
+            $message = "Error: Password is required.";
+        } elseif (empty($newUser['email']) || !filter_var($newUser['email'], FILTER_VALIDATE_EMAIL)) {
+            $message = "Error: A valid email address is required.";
+        } elseif ($_SESSION['role'] === 'superuser' && empty($newUser['organization'])) {
+            $message = "Error: Organization is required for admin accounts.";
+        } else {
+            // Check for duplicate username or email
+            $usernameExists = array_filter($users, fn($user) => isset($user['username']) && $user['username'] === $newUser['username']);
+            $emailExists = array_filter($users, fn($user) => isset($user['email']) && $user['email'] === $newUser['email']);
+            if (!empty($usernameExists)) {
+                $message = "Error: Username already exists.";
+            } elseif (!empty($emailExists)) {
+                $message = "Error: Email address is already in use.";
+            } else {
+                $users[] = $newUser;
+                if (file_put_contents($usersFile, json_encode($users, JSON_PRETTY_PRINT)) === false) {
+                    $message = "Error: Failed to save user. Check file permissions.";
+                } else {
+                    $message = "User registered successfully!";
+                    header('Location: manage_users.php?message=' . urlencode($message));
+                    exit;
+                }
+            }
         }
-    }
-
-    // Voeg nieuwe gebruiker toe
-    if (!isset($error)) {
-        $users[] = [
-            'username' => $username,
-            'password' => $password,
-            'role' => $role,
-            'organization' => $organization
-        ];
-        file_put_contents($usersFile, json_encode($users, JSON_PRETTY_PRINT));
-        header('Location: manage_users.php?message=User created successfully');
-        exit;
     }
 }
 ?>
@@ -59,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <head>
     <meta charset="UTF-8">
-    <title>User Registration</title>
+    <title>Register User</title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 
@@ -70,46 +88,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="wave"></div>
     </div>
     <div class="container">
-        <h1>User Registration</h1>
-        <?php if (isset($error)): ?>
-            <p style="color: red;"><?php echo htmlspecialchars($error); ?></p>
+        <h1>Register New User</h1>
+        <?php if ($message): ?>
+            <p style="color: <?php echo strpos($message, 'Error') === false ? 'green' : 'red'; ?>">
+                <?php echo htmlspecialchars($message); ?>
+            </p>
         <?php endif; ?>
-        <form action="register.php" method="post">
-            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+        <form method="POST" action="register.php">
             <label for="username">Username:</label>
-            <input type="text" name="username" id="username" required>
-            <br>
+            <input type="text" id="username" name="username" placeholder="Enter username" required>
             <label for="password">Password:</label>
-            <input type="password" name="password" id="password" required>
-            <br>
-            <label for="role">Role:</label>
-            <select name="role" id="role">
-                <?php if ($_SESSION['role'] === 'superuser'): ?>
-                    <option value="admin">Admin</option>
-                    <option value="user">User</option>
-                <?php else: ?>
-                    <option value="user">User</option>
-                <?php endif; ?>
-            </select>
-            <br>
-            <label for="organization">Organization:</label>
+            <input type="password" id="password" name="password" placeholder="Enter password" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Enter email" required>
             <?php if ($_SESSION['role'] === 'superuser'): ?>
-                <select name="organization" id="organization">
-                    <option value="">Select an organization</option>
-                    <?php foreach ($organizations as $org): ?>
-                        <option value="<?php echo htmlspecialchars($org['name']); ?>">
-                            <?php echo htmlspecialchars($org['name']); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            <?php else: ?>
-                <input type="text" name="organization" id="organization"
-                    value="<?php echo isset($_SESSION['organization']) ? htmlspecialchars($_SESSION['organization']) : ''; ?>">
+                <label for="organization">Organization:</label>
+                <input type="text" id="organization" name="organization" placeholder="Enter organization" required>
             <?php endif; ?>
-            <br>
-            <button type="button" onclick="window.location.href='index.php';">Home</button>
             <button type="submit">Register</button>
         </form>
+        <button type="button" onclick="window.location.href='manage_users.php';">Back to Manage Users</button>
     </div>
 </body>
 
