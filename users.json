@@ -17,5 +17,19 @@
         "email": "test@example.com",
         "role": "user",
         "organization": "Intervance"
+    },
+    {
+        "username": "Franek",
+        "password": "$2y$10$r8NC4tZIWK01kwSCxNN9CuVW\/QOOOJTEwlLf1nvyYhPExeWT7j5cy",
+        "email": "example@123.com",
+        "role": "user",
+        "organization": "Intervance"
+    },
+    {
+        "username": "Jarno",
+        "password": "$2y$10$Lm.FgjqzeNH0QIbq.vridOb9NaEnAHa0rJXM\/4Bc2xpWUlxmrdtBu",
+        "email": "control@example.com",
+        "role": "user",
+        "organization": "Intervance"
     }
 ]

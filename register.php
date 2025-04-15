@@ -107,7 +107,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
             <button type="submit">Register</button>
         </form>
-        <button type="button" onclick="window.location.href='manage_users.php';">Back to Manage Users</button>
+        <div class="button-container">
+            <button type="button" onclick="window.location.href='manage_users.php';">Back to Manage Users</button>
+        </div>
     </div>
 </body>
 

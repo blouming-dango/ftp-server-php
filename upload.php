@@ -129,14 +129,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             <input type="submit" value="Upload File">
         </form>
-        <br>
-        <button onclick="location.href='download.php'">View and Download Uploaded Files</button>
-        <?php if ($isAdmin || $isSuperuser): ?>
-            <button type="button" onclick="window.location.href='manage_users.php';">Manage Users</button>
-        <?php endif; ?>
-        <?php if ($isSuperuser): ?>
-            <button type="button" onclick="window.location.href='manage_organizations.php';">Manage Organizations</button>
-        <?php endif; ?>
+
+        <div class="button-container">
+            <button onclick="location.href='download.php'">View and Download Uploaded Files</button>
+            <?php if ($isAdmin || $isSuperuser): ?>
+                <button type="button" onclick="window.location.href='manage_users.php';">Manage Users</button>
+            <?php endif; ?>
+            <?php if ($isSuperuser): ?>
+                <button type="button" onclick="window.location.href='manage_organizations.php';">Manage
+                    Organizations</button>
+            <?php endif; ?>
+        </div>
+
     </div>
 </body>
 
