@@ -50,19 +50,54 @@ nav ul li {
 }
 
 /* Buttons */
-button {
+button,
+input[type="submit"] {
     background-color: #015871;
+    /* Consistent wave color */
     color: #fff;
     border: none;
-    padding: 12px;
+    padding: 12px 20px;
+    /* Adjusted padding for better spacing */
     border-radius: 4px;
     cursor: pointer;
     font-size: 1em;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-button:hover {
+button:hover,
+input[type="submit"]:hover {
     background-color: #013f52;
+    /* Darker shade for hover effect */
+    transform: scale(1.05);
+    /* Slight zoom effect on hover */
+}
+
+button:active,
+input[type="submit"]:active {
+    transform: scale(0.95);
+    /* Slight shrink effect on click */
+}
+
+/* Secondary buttons (e.g., 'Back') */
+button.secondary {
+    background-color: #ccc;
+    color: #333;
+    padding: 10px 18px;
+}
+
+button.secondary:hover {
+    background-color: #bbb;
+}
+
+/* Button container for horizontal alignment */
+.button-container {
+    display: flex;
+    gap: 10px;
+    /* Space between buttons */
+    justify-content: center;
+    /* Center the buttons horizontally */
+    margin-top: 20px;
+    /* Add some spacing above the buttons */
 }
 
 /* Nieuwe zeegolf animatie */
@@ -151,52 +186,34 @@ label {
 
 input[type="text"],
 input[type="password"],
-input[type="file"],
+input[type="email"],
 select {
-    padding: 10px;
+    padding: 10px 15px;
+    /* Adjusted padding for better spacing */
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 1em;
     width: 100%;
     box-sizing: border-box;
-    transition: border-color 0.3s;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 input[type="text"]:focus,
 input[type="password"]:focus,
+input[type="email"]:focus,
 select:focus {
     border-color: #015871;
+    /* Highlight border on focus */
+    box-shadow: 0 0 5px rgba(1, 88, 113, 0.5);
+    /* Subtle glow effect */
     outline: none;
 }
 
-/* Buttons */
-button,
-input[type="submit"] {
-    background-color: #015871;
-    color: #fff;
-    border: none;
-    padding: 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s ease;
-}
-
-button:hover,
-input[type="submit"]:hover {
-    background-color: #013f52;
-}
-
-/* Second button (such as 'Back') */
-button[type="reset"],
-button.secondary {
-    background-color: #ccc;
-    color: #333;
-}
-
-button[type="reset"]:hover,
-button.secondary:hover {
-    background-color: #bbb;
+/* Error styling for inputs */
+input[type="email"].error {
+    border-color: #d32f2f;
+    /* Red border for invalid input */
+    box-shadow: 0 0 5px rgba(211, 47, 47, 0.5);
 }
 
 /* Links */

@@ -29,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['loggedin'] = true;
             $_SESSION['username'] = $username;
             $_SESSION['role'] = $user['role'];
+            $_SESSION['organization'] = $user['organization'] ?? null; // Set organization
             header('Location: upload.php');
             exit;
         }
@@ -74,7 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button onclick="window.location.href='index.php';" class="button">Home</button>
             <button type="submit">Login</button>
         </form>
-        <p>Don't have an account? <a href="register.php">Register here</a>.</p>
     </div>
 </body>
 

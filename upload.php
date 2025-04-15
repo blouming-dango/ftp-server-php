@@ -13,6 +13,8 @@ if (!isset($_SESSION['loggedin'])) {
 // Define the target directory for uploaded files (outside the web root)
 $targetDir = __DIR__ . '/uploads/';
 $metadataFile = __DIR__ . '/uploads.json';
+$isAdmin = $_SESSION['role'] === 'admin';
+$isSuperuser = $_SESSION['role'] === 'superuser';
 
 // Check if the directory exists, if not, create it
 if (!is_dir($targetDir)) {
@@ -102,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 
     <div class="container">
-        <!-- Signed in block -->
+        <!-- Logout button -->
         <div class="user-info">
             <p>Logged in as: <strong><?php echo htmlspecialchars($_SESSION['username']); ?></strong>
                 (<?php echo $_SESSION['role']; ?>)</p>
@@ -127,11 +129,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             <input type="submit" value="Upload File">
         </form>
-        <br>
-        <button onclick="location.href='download.php'">View and Download Uploaded Files</button>
-        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-            <button onclick="location.href='manage_users.php'">Manage Users</button>
-        <?php endif; ?>
+
+        <div class="button-container">
+            <button onclick="location.href='download.php'">View and Download Uploaded Files</button>
+            <?php if ($isAdmin || $isSuperuser): ?>
+                <button type="button" onclick="window.location.href='manage_users.php';">Manage Users</button>
+            <?php endif; ?>
+            <?php if ($isSuperuser): ?>
+                <button type="button" onclick="window.location.href='manage_organizations.php';">Manage
+                    Organizations</button>
+            <?php endif; ?>
+        </div>
+
     </div>
 </body>
 
