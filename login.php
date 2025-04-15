@@ -72,8 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <label for="password">Password</label>
             <input type="password" name="password" id="password" required>
             <br>
-            <button onclick="window.location.href='index.php';" class="button">Home</button>
             <button type="submit">Login</button>
+            <button onclick="window.location.href='index.php';" class="button">Home</button>
         </form>
     </div>
 </body>

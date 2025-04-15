@@ -73,7 +73,7 @@ if (isset($_GET['delete'])) {
                 </li>
             <?php endforeach; ?>
         </ul>
-        <button type="button" onclick="window.location.href='index.php';">Home</button>
+        <button type="button" onclick="window.location.href='upload.php';">Back</button>
     </div>
 </body>
 
