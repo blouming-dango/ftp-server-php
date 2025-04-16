@@ -4,7 +4,6 @@ This guide explains how to set up and run a PHP-based FTP server using tools lik
 
 ## Table of Contents
 
-- [How to Use the PHP FTP Server](#how-to-use-the-php-ftp-server)
 - [Prerequisites](#prerequisites)
 - [Step-by-Step Instructions](#step-by-step-instructions)
     - [1. Install Laragon, WAMP, or XAMPP](#1-install-laragon-wamp-or-xampp)
