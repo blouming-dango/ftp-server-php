@@ -18,7 +18,7 @@ if (!is_array($users)) {
 $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $newUser = [
-        'username' => filter_var($_POST['username'] ?? '', FILTER_SANITIZE_STRING),
+        'username' => filter_var($_POST['username'] ?? ''),
         'password' => password_hash($_POST['password'] ?? '', PASSWORD_DEFAULT),
         'email' => filter_var($_POST['email'] ?? ''),
     ];
@@ -103,7 +103,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="email" id="email" name="email" placeholder="Enter email" required>
             <?php if ($_SESSION['role'] === 'superuser'): ?>
                 <label for="organization">Organization:</label>
-                <input type="text" id="organization" name="organization" placeholder="Enter organization" required>
+                <select id="organization" name="organization" required>
+                    <option value="" disabled selected>Select an organization</option>
+                    <?php
+                    // Load available organizations from a file or database
+                    $organizationsFile = __DIR__ . '/organizations.json';
+                    $organizations = file_exists($organizationsFile) ? json_decode(file_get_contents($organizationsFile), true) : [];
+                    if (is_array($organizations)) {
+                        foreach ($organizations as $organization) {
+                            if (is_array($organization) && isset($organization['name'])) {
+                                $sanitizedOrganization = htmlspecialchars($organization['name'], ENT_QUOTES, 'UTF-8');
+                                echo "<option value=\"{$sanitizedOrganization}\">{$sanitizedOrganization}</option>";
+                            }
+                        }
+                    }
+                    ?>
+                </select>
             <?php endif; ?>
             <button type="submit">Register</button>
         </form>

@@ -1,7 +1,7 @@
 [
     {
         "username": "superuser",
-        "password": "$2y$10$QbGvPbbwZtEXD8o6Jw7SX.a\/0Tj1t5fM0MuIhw6knlXa5uNy1s7ru",
+        "password": "$2y$10$tPBEMM7m9ZwiP480cuCM8OFzv4AYnM9ReugZrikx1K0.pJ2VSqQsO",
         "role": "superuser",
         "organization": null
     },
@@ -9,13 +9,6 @@
         "username": "adminIntervance",
         "password": "$2y$10$BWE9akS4IFHbDYcVIJfaPOZPDWt8ASbphixopUH8lGLXM70vjzW8W",
         "role": "admin",
-        "organization": "Intervance"
-    },
-    {
-        "username": "testuser",
-        "password": "$2y$10$NqsjSkZN43iMxuSuD3wdDem5GQ4\/If0FVgtEd3NMgWPC5.5ZU.gSG",
-        "email": "test@example.com",
-        "role": "user",
         "organization": "Intervance"
     },
     {
@@ -31,5 +24,19 @@
         "email": "control@example.com",
         "role": "user",
         "organization": "Intervance"
+    },
+    {
+        "username": "Testadmin",
+        "password": "$2y$10$tcNhAe0r5MYfyQjyc1q1xu6JJHfDIllpRCYsq2cz.OKSHrVBwgfnC",
+        "email": "support@test.com",
+        "role": "admin",
+        "organization": "Test"
+    },
+    {
+        "username": "test1",
+        "password": "$2y$10$E7nm6Yc8f\/9mDdNjlrIIieNR0ixPITubtzywq0Xn4rROPSV.VoG2u",
+        "email": "test1@example.com",
+        "role": "user",
+        "organization": "Test"
     }
 ]
