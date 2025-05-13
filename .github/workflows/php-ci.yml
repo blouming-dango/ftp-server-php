@@ -24,4 +24,6 @@ jobs:
       run: composer install --prefer-dist --no-progress
 
     - name: Run Tests
-      run: vendor/bin/phpunit --verbose
+      run: |
+        chmod +x vendor/bin/phpunit
+        vendor/bin/phpunit --verbose
