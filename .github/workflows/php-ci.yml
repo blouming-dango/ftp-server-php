@@ -1,29 +1,17 @@
-name: PHP CI
+- name: Setup PHP
+  uses: shivammathur/setup-php@v2
+  with:
+    php-version: '8.2'
+    extensions: mbstring, xml, ctype, iconv
+    tools: composer
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+- name: Install Dependencies
+  run: composer install --prefer-dist --no-progress
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+- name: Verify PHPUnit Version
+  run: vendor/bin/phpunit --version
 
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.2'
-        extensions: mbstring, xml, ctype, iconv
-        tools: composer
-
-    - name: Install Dependencies
-      run: composer install --prefer-dist --no-progress
-
-    - name: Run Tests
-      run: |
-        chmod +x vendor/bin/phpunit
-        vendor/bin/phpunit --testdox --colors=always --coverage-text --coverage-clover=coverage.xml
+- name: Run Tests with Detailed Logs
+  run: |
+    chmod +x vendor/bin/phpunit
+    vendor/bin/phpunit --testdox --colors=always --coverage-text --coverage-clover=coverage.xml || exit 1
