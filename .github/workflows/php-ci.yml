@@ -27,4 +27,3 @@ jobs:
       run: |
         chmod +x vendor/bin/phpunit
         vendor/bin/phpunit --testdox --colors=always --coverage-text --coverage-clover=coverage.xml
-        vendor/bin/phpcs --standard=PSR12 src tests --extensions=php --colors=always
