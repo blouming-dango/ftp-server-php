@@ -1,7 +1,7 @@
 [
     {
         "username": "superuser",
-        "password": "$2y$10$tPBEMM7m9ZwiP480cuCM8OFzv4AYnM9ReugZrikx1K0.pJ2VSqQsO",
+        "password": "$2y$10$sP2t.duY2DMNI73P4pM6kusEhhIduuzPOzjjmB9bsEbKLs2Bwrqrm",
         "role": "superuser",
         "organization": null
     },
