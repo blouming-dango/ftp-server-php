@@ -1,17 +1,27 @@
-- name: Setup PHP
-  uses: shivammathur/setup-php@v2
-  with:
-    php-version: '8.2'
-    extensions: "mbstring, xml, ctype, iconv"
-    tools: "composer"
+name: PHP CI
 
-- name: Install Dependencies
-  run: composer install --prefer-dist --no-progress
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
-- name: Verify PHPUnit Version
-  run: vendor/bin/phpunit --version
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-- name: Run Tests with Detailed Logs
-  run: |
-    chmod +x vendor/bin/phpunit
-    vendor/bin/phpunit --testdox --colors=always --coverage-text --coverage-clover=coverage.xml || exit 1
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2' # Specify your PHP version
+        extensions: mbstring, xml, ctype, iconv
+        tools: composer
+
+    - name: Install Dependencies
+      run: composer install --prefer-dist --no-progress
+
+    - name: Run Tests
+      run: vendor/bin/phpunit # Adjust if your test command differs
